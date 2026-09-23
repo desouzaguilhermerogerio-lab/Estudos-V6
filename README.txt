@@ -1,12 +1,21 @@
-ESTUDOS V6
+ESTUDOS V6 — ACESSO ESTÁVEL
 
-Use o SimpleHttpServer para servir esta pasta pela rede local.
+A V6 foi ajustada para não considerar o endereço IP do Wi-Fi como o endereço permanente da plataforma.
 
-IMPORTANTE: os registros também são gravados em ./dados/. Se o Wi‑Fi mudar e o IP do servidor mudar, basta abrir a V6 pelo NOVO endereço exibido pelo SimpleHttpServer. A V6 procura a cópia do servidor antes de iniciar um estado vazio.
+IMPORTANTE
+O ícone da tela inicial só deve ser instalado depois que a V6 estiver aberta pelo endereço mDNS/Bonjour do SimpleHttpServer, e não por um endereço como 192.168.x.x ou 10.x.x.x.
 
-No SimpleHttpServer:
-- deixe esta pasta como pasta raiz;
-- deixe a pasta com permissão de escrita/upload;
-- mantenha o servidor em execução.
+CONFIGURAÇÃO NO SIMPLEHTTPSERVER
+1. Use o SimpleHttpServer 3.5.0 ou mais recente.
+2. Ative mDNS / Bonjour nas configurações do servidor.
+3. Mantenha a pasta da V6 como pasta raiz (Root) e com escrita permitida.
+4. Ative “Allow uploads”.
+5. Abra a V6 pelo nome/endereço local anunciado pelo servidor, em vez de usar o IP mostrado pelo Wi-Fi.
+6. Somente depois disso instale a V6 na tela inicial.
 
-Não é necessário usar mDNS/Bonjour para a recuperação dos dados. Não instale a V6 como ícone enquanto estiver acessando por um IP que pode mudar.
+DADOS
+A V6 mantém uma cópia local e também grava cópias em /dados/ no servidor. Cópias vazias nunca são enviadas ao servidor.
+Se a recuperação automática não acontecer, Config. → Recuperar dados do servidor tenta carregar a cópia mais recente existente em /dados/.
+
+OBSERVAÇÃO
+O SimpleHttpServer é um servidor da rede local. A V6 continuará disponível somente quando o dispositivo que hospeda o servidor estiver acessível pela rede local.

@@ -1,10 +1,10 @@
 {
-  "name": "Estudos V6",
-  "short_name": "Estudos V6",
-  "start_url": "./",
+  "name": "Estudos V7",
+  "short_name": "Estudos V7",
+  "start_url": "./?v=7",
   "display": "standalone",
-  "background_color": "#0d1623",
-  "theme_color": "#0d1623",
+  "background_color": "#e9dfcc",
+  "theme_color": "#e9dfcc",
   "icons": [
     {
       "src": "icon-192.png",
@@ -17,6 +17,6 @@
       "type": "image/png"
     }
   ],
-  "id": "estudos-v6",
+  "id": "estudos-v7",
   "scope": "./"
 }
