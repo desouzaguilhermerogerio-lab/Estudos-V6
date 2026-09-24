@@ -1,4 +1,4 @@
-const CACHE='estudos-v7-2';
+const CACHE='estudos-v7-3';
 const ASSETS=['./','./index.html','./manifest.json','./espc_ex.png','./espc_logo.png','./espc_facade_sepia.jpg','./study_desk.png','./math.png','./physics.png','./chem.png','./history.png','./geo.png','./port.png','./eng.png','./icon-192.png','./icon-512.png'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(ns=>Promise.all(ns.filter(n=>n!==CACHE).map(n=>caches.delete(n)))).then(()=>self.clients.claim())));
