@@ -1,4 +1,4 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#e9dfcc"><meta name="description" content="Plataforma pessoal de estudos"><link rel="manifest" href="manifest.json"><title>Estudos — V7</title><style>
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#171717"><meta name="description" content="Plataforma pessoal de estudos"><link rel="manifest" href="manifest.json"><title>Estudos — V7</title><style>
 :root{--bg:#eee1c9;--paper:#f7eedc;--paper2:#eee1c9;--line:#c7b28d;--text:#33261b;--muted:#705f4b;--brown:#5a3b20;--brown2:#79542d;--gold:#a07b43;--shadow:0 2px 7px #4b321c18;--serif:Georgia,"Times New Roman",serif;--sans:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:var(--sans)}button,input,select,textarea{font:inherit}button{color:inherit}body{min-height:100vh}.app{min-height:100vh;background:linear-gradient(90deg,#e7d8bd,#f3e8d3 18%,#f5ead7 100%)}
 .topbar{height:82px;background:linear-gradient(90deg,#4b3019,#654421 50%,#51351c);color:#f8efdd;display:grid;grid-template-columns:320px 1fr 130px;align-items:center;padding:0 24px 0 28px;box-shadow:0 2px 7px #24170c55}.brand{display:flex;align-items:center;gap:13px;font:700 38px var(--serif);letter-spacing:.01em}.crest{width:56px;height:56px;object-fit:contain;filter:none}.motto{font:italic 20px var(--serif);text-align:center;color:#fff6e6}.top-actions{display:flex;justify-content:flex-end;align-items:center;gap:22px}.top-icon{font-size:25px;color:#fff8e9}.avatar{width:40px;height:40px;border-radius:50%;border:2px solid #ead8b8;background:#f3e4c7;color:#5b3b1e;display:grid;place-items:center;font-size:23px}
@@ -148,6 +148,14 @@ async function initializeStorage(){
   }
   else if(old){state=normalizeState({...fresh(),...old,history:{simulados:old.history?.simulados||[]}})}
   else state=fresh();
+  // V7 dark-theme migration: the new simple platform starts in dark mode once.
+  // After that, the user's choice in Configurações is preserved.
+  try{
+    if(localStorage.getItem('estudos_theme_initialized_v2')!=='1'){
+      state.theme='dark';
+      localStorage.setItem('estudos_theme_initialized_v2','1');
+    }
+  }catch(e){state.theme='dark'}
   storageReady=true;
   // Establish local + IndexedDB + server copies only after the source state has been selected.
   persist();
@@ -225,7 +233,7 @@ function toggleTopic(k,was){if(was&&topicLocked(k)){alert('Este tópico foi conc
 function openHistory(){let hs=state.history.simulados||[];alert(hs.length?hs.map(x=>`Simulado — ${shortFmt(x.date)}`).join('\n'):'Nenhum simulado concluído.')}
 function closeModal(){document.querySelectorAll('.modalWrap').forEach(x=>x.remove())}
 function enter(...a){path=a;view='subjects';render()}function back(){path.pop();render()}function go(v){view=v;path=[];render()}function calMove(n){calBase=new Date(calBase.getFullYear(),calBase.getMonth()+n,1);render()}function theme(){state.theme=state.theme==='dark'?'light':'dark';persist();render()}
-if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js?v=8.0').catch(()=>{});}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js?v=7.0').catch(()=>{});}
 window.go=go;window.enter=enter;window.back=back;window.openDay=openDay;window.closeModal=closeModal;window.addGoal=addGoal;window.chooseType=chooseType;window.saveGoal=saveGoal;window.editGoal=editGoal;window.delGoal=delGoal;window.toggleNoStudy=toggleNoStudy;window.completeGoal=completeGoal;window.finalizeStudy=finalizeStudy;window.toggleTopic=toggleTopic;window.theme=theme;window.calMove=calMove;
 render();
 </script></body></html>\n<style id="simple-layout-v1">
@@ -247,45 +255,4 @@ body{font-family:Arial,Helvetica,sans-serif}
 .panel-title h2{font-size:16px}.subject-tile{border:1px solid #e3e3df;box-shadow:none;background:#fff}.subject-tile img{display:none}.subject-tile .st-name{padding:12px}.menu-card,.estimate-item{box-shadow:none}
 @media(max-width:1180px){.home-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto}.welcome,.course-progress,.quote,.today,.calendar-panel,.subjects-panel,.bottom-progress,.bottom-estimate,.bottom-hours,.settings-panel{grid-column:auto;grid-row:auto}.welcome{grid-column:1/3}.subjects-panel{grid-column:1/3}}
 @media(max-width:760px){.topbar{height:58px;grid-template-columns:1fr auto;padding:0 12px}.motto{display:none}.dashboard{display:block}.sidebar{position:static;height:auto;min-height:0;border-right:0;border-bottom:1px solid #deded9}.side-nav{display:grid;grid-template-columns:repeat(4,1fr);padding:6px}.side-nav button{padding:7px 3px;font-size:11px;justify-content:center;flex-direction:column;gap:2px}.side-nav .navico{font-size:18px;width:auto}.content{padding:10px}.home-grid{grid-template-columns:1fr}.welcome,.course-progress,.quote,.today,.calendar-panel,.subjects-panel,.bottom-progress,.bottom-estimate,.bottom-hours,.settings-panel{grid-column:1;grid-row:auto}.quote{min-height:120px}}
-</style>
-<style id="dark-theme-v1">
-/* Tema escuro — opção sóbria e funcional */
-body:not(.theme-light){background:#171717;color:#e8e8e8}
-body:not(.theme-light) .app{background:#171717}
-body:not(.theme-light) .topbar{background:#202020;border-bottom-color:#383838;color:#eee}
-body:not(.theme-light) .brand{color:#f1f1f1}
-body:not(.theme-light) .motto{color:#bdbdbd}
-body:not(.theme-light) .avatar{background:#2b2b2b;border-color:#4a4a4a;color:#eee}
-body:not(.theme-light) .sidebar{background:#202020;border-right-color:#383838}
-body:not(.theme-light) .side-nav button{color:#c8c8c8}
-body:not(.theme-light) .side-nav button:hover,body:not(.theme-light) .side-nav button.active{background:#333;color:#fff}
-body:not(.theme-light) .content{background:#171717}
-body:not(.theme-light) .panel,body:not(.theme-light) .card{background:#232323;border-color:#3b3b3b;color:#e8e8e8;box-shadow:none}
-body:not(.theme-light) .panel h1,body:not(.theme-light) .panel h2,body:not(.theme-light) .panel h3,body:not(.theme-light) .card h2,body:not(.theme-light) .card h3{color:#f0f0f0}
-body:not(.theme-light) .welcome p,body:not(.theme-light) .quote .qtext,body:not(.theme-light) .muted,body:not(.theme-light) .small-muted{color:#aaa}
-body:not(.theme-light) .subject-tile,body:not(.theme-light) .subjectCard,body:not(.theme-light) .menu-card,body:not(.theme-light) .estimateBook,body:not(.theme-light) .topicPick,body:not(.theme-light) .topicGroup,body:not(.theme-light) .installCard,body:not(.theme-light) .stableCard{background:#292929;border-color:#444;color:#e8e8e8}
-body:not(.theme-light) .subjectBody,body:not(.theme-light) .subjectBody h3{color:#eee}
-body:not(.theme-light) .subjectArt{background:#2d2d2d}
-body:not(.theme-light) .progress,body:not(.theme-light) .track{background:#414141}
-body:not(.theme-light) .fill,body:not(.theme-light) .bar{background:#b8b8b8}
-body:not(.theme-light) .btn,body:not(.theme-light) .add-btn,body:not(.theme-light) .cal-arrow,body:not(.theme-light) .typeBtn{background:#303030;border-color:#4a4a4a;color:#eee}
-body:not(.theme-light) .primary,body:not(.theme-light) .logout{background:#e0e0e0;border-color:#e0e0e0;color:#171717}
-body:not(.theme-light) .listBtn{background:#292929;border-color:#444;color:#eee}
-body:not(.theme-light) .weekcol,body:not(.theme-light) .day{background:#292929;border-color:#444;color:#eee}
-body:not(.theme-light) .goal{background:#353535;color:#ddd}
-body:not(.theme-light) .cal-grid{border-color:#444}
-body:not(.theme-light) .cal-cell{border-color:#444;color:#ddd}
-body:not(.theme-light) .cal-head{color:#aaa}
-body:not(.theme-light) .cal-today{background:#eee;color:#171717}
-body:not(.theme-light) .modalWrap{background:#000b}
-body:not(.theme-light) .modal{background:#252525;border-color:#444;color:#eee}
-body:not(.theme-light) .modal input,body:not(.theme-light) .modal select,body:not(.theme-light) .modal textarea{background:#1d1d1d;color:#eee;border-color:#444}
-body:not(.theme-light) .topicGroup summary{background:#303030}
-body:not(.theme-light) .setting-line,body:not(.theme-light) .prog-item,body:not(.theme-light) .estimate-item{border-color:#3d3d3d}
-body:not(.theme-light) .hour-line{background:#292929;border-color:#444}
-body:not(.theme-light) .total-line{border-color:#444}
-body:not(.theme-light) .stableUrl{background:#1d1d1d;border-color:#444;color:#ddd}
-body:not(.theme-light) .badge{border-color:#555;color:#ddd}
-body:not(.theme-light) .back,body:not(.theme-light) .linkish{color:#ddd}
-body:not(.theme-light) .ring:after{background:#232323;color:#eee}
 </style>
